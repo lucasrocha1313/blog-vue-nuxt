@@ -4,31 +4,31 @@
       <h1>Get the latest tech news!</h1>
     </section>
     <section class="featured-posts">
-      <nuxt-link :to="'posts/' + 1"  class="post-preview">
-        <article>
-          <div class="post-thumbnail" style="background-image: url('https://imageio.forbes.com/specials-images/imageserve/61d52d4e3a76ed81ac034ea8/The-10-Tech-Trends-That-Will-Transform-Our-World/960x0.jpg?format=jpg&width=960')"></div>
-          <div class="post-content">
-            <h1>Post Title</h1>
-            <p>Preview Text</p>
-          </div>
-        </article>
-      </nuxt-link>
-      <nuxt-link :to="'posts/' + 2" class="post-preview">
-        <article>
-          <div class="post-thumbnail" style="background-image: url('https://imageio.forbes.com/specials-images/imageserve/61d52d4e3a76ed81ac034ea8/The-10-Tech-Trends-That-Will-Transform-Our-World/960x0.jpg?format=jpg&width=960')"></div>
-          <div class="post-content">
-            <h1>Post Title 2</h1>
-            <p>Preview Text 2</p>
-          </div>
-        </article>
-      </nuxt-link>
+      <PostPreview
+        id="1"
+        title="Hello there!"
+        preview-text="This is my first post!"
+        thumbnail="https://imageio.forbes.com/specials-images/imageserve/61d52d4e3a76ed81ac034ea8/The-10-Tech-Trends-That-Will-Transform-Our-World/960x0.jpg?format=jpg&width=960" />
+      <PostPreview
+        id="2"
+        title="Hello there 2!"
+        preview-text="This is my second post!"
+        thumbnail="https://hips.hearstapps.com/hmg-prod/images/coolest-tech-2022-1669144775.jpg?crop=1.00xw:1.00xh;0,0&resize=1200:*" />
+      <PostPreview
+        id="3"
+        title="Hello there 3!"
+        preview-text="This is my third post!"
+        thumbnail="http://www.ineteconomics.org/uploads/featured/iStock-1140691167.jpeg" />
     </section>
   </div>
 </template>
 
 <script>
+import PostPreview from "../components/posts/post-preview.vue";
+
 export default {
-  name: 'IndexPage'
+  name: 'IndexPage',
+  components: {PostPreview}
 }
 </script>
 
@@ -40,6 +40,7 @@ export default {
   box-sizing: border-box;
   background-position: center;
   background-size: cover;
+  background-image: url('./assets/images/main-page-background.jpg');
 }
 
 .intro h1 {
@@ -70,41 +71,5 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-}
-
-.post-preview {
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 2px #ccc;
-  background-color: white;
-  width: 90%;
-}
-
-a {
-  text-decoration: none;
-  color: black;
-}
-
-@media (min-width: 850px) {
-  .post-preview {
-    width: 400px;
-    margin: 10px;
-  }
-}
-
-.post-thumbnail {
-  width: 100%;
-  height: 200px;
-  background-position: center;
-  background-size: cover;
-}
-
-.post-content {
-  padding: 10px;
-  text-align: center;
-}
-
-a:hover .post-content,
-a:active .post-content {
-  background-color: #ccc;
 }
 </style>
