@@ -1,55 +1,30 @@
 <template>
   <div class="admin-new-post-page">
     <section class="new-post-form">
-      <form @submit.prevent="onSave">
-        <AppInputControl v-model="editedPost.author">Author Name</AppInputControl>
-        <AppInputControl v-model="editedPost.title">Title</AppInputControl>
-        <AppInputControl v-model="editedPost.thumbnailLink">Thumbnail Link</AppInputControl>
-        <AppInputControl
-          control-type="textarea"
-          v-model="editedPost.content">Content</AppInputControl>
-        <AppButton type="submit">Save</AppButton>
-        <AppButton
-          type="button"
-          style="margin-left: 10px"
-          btn-style="cancel"
-          @click="onCancel">Cancel</AppButton>
-      </form>
+      <AdminPostForm />
     </section>
 
   </div>
 </template>
 
 <script>
-import AppInputControl from "../../../components/ui/app-control-input.vue";
-import AppButton from "../../../components/ui/app-button.vue";
+import AdminPostForm from "../../../components/admin/admin-post-form.vue";
 
 export default {
-  name: "index",
-  components: {AppButton, AppInputControl},
-  data() {
-    return {
-      editedPost: {
-        author: '',
-        title: '',
-        thumbnailLink: '',
-        content: ''
-      }
-    }
-  },
-  methods: {
-    onSave() {
-      //TODO save post
-      console.log(this.editedPost)
-    },
-    onCancel() {
-      //TODO navigate back
-      this.$router.push('/admin')
-    }
-  }
+  components: {AdminPostForm},
+  layout: 'admin'
 }
 </script>
 
 <style scoped>
+.new-post-form {
+  width: 90%;
+  margin: 20px auto;
+}
 
+@media (min-width: 768px) {
+  .new-post-form {
+    width: 500px;
+  }
+}
 </style>
