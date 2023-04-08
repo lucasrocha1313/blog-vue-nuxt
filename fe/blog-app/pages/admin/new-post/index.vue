@@ -1,7 +1,7 @@
 <template>
   <div class="admin-new-post-page">
     <section class="new-post-form">
-      <AdminPostForm />
+      <AdminPostForm @submit-post="onSubmitted"/>
     </section>
 
   </div>
@@ -9,10 +9,19 @@
 
 <script>
 import AdminPostForm from "../../../components/admin/admin-post-form.vue";
+import axios from "axios";
 
 export default {
   components: {AdminPostForm},
-  layout: 'admin'
+  layout: 'admin',
+  methods: {
+    onSubmitted(postData) {
+      //TODO url to env
+      axios.post('xxxx', postData)
+        .then(result => console.log(result))
+        .catch(err => console.error(err))
+    }
+  }
 }
 </script>
 
