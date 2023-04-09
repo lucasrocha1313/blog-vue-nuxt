@@ -16,8 +16,7 @@ export default {
   layout: 'admin',
   methods: {
     onSubmitted(postData) {
-      //TODO url to env
-      axios.post('xxxx', postData)
+      axios.post(`${this.$config.dbUrl}/posts.json`, {...postData, updatedDate: new Date()})
         .then(result => console.log(result))
         .catch(err => console.error(err))
     }

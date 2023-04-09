@@ -3,7 +3,7 @@
     <section class="intro">
       <h1>Get the latest tech news!</h1>
     </section>
-    <PostList />
+    <PostList :posts="loadedPosts"/>
   </div>
 </template>
 
@@ -13,7 +13,12 @@ import PostList from "../components/posts/post-list.vue";
 
 export default {
   name: 'IndexPage',
-  components: {PostList, PostPreview}
+  components: {PostList, PostPreview},
+  computed: {
+    loadedPosts() {
+      return this.$store.getters.getLoadedPosts
+    }
+  }
 }
 </script>
 
