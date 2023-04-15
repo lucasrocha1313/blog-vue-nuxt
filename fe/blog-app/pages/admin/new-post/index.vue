@@ -16,9 +16,8 @@ export default {
   layout: 'admin',
   methods: {
     onSubmitted(postData) {
-      axios.post(`${this.$config.dbUrl}/posts.json`, {...postData, updatedDate: new Date()})
-        .then(result => console.log(result))
-        .catch(err => console.error(err))
+      this.$store.dispatch('addPost', postData)
+        .then(() => this.$router.push('/admin'))
     }
   }
 }

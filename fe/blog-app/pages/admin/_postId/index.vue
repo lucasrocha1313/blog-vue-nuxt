@@ -1,26 +1,37 @@
 <template>
   <div class="admin-post-page">
     <section class="update-form">
-      <AdminPostForm :post="loadedPost"/>
+      <AdminPostForm :post="loadedPost"  @submit-post="onSubmitted"/>
     </section>
   </div>
 </template>
 
 <script>
 import AdminPostForm from "../../../components/admin/admin-post-form.vue";
+import axios from "axios";
 
 export default {
   name: "index",
   components: {AdminPostForm},
   layout: 'admin',
+  asyncData({params, error, $config}) {
+    return axios.get(`${$config.dbUrl}/posts/${params.postId}.json`)
+      .then(res => {
+        return {
+          loadedPost: {...res.data, id: params.postId}
+        }
+      })
+      .catch(err => error(err))
+  },
   data() {
     return {
-      loadedPost: {
-        author: 'Tonim',
-        title: 'My awesome Post',
-        thumbnailLink: 'http://www.ineteconomics.org/uploads/featured/iStock-1140691167.jpeg',
-        content: 'Super amazing, thanks for that!',
-      }
+      loadedPost: {}
+    }
+  },
+  methods: {
+    onSubmitted(postData) {
+      this.$store.dispatch('editPost', postData)
+        .then(() => this.$router.push('/admin'))
     }
   }
 }
