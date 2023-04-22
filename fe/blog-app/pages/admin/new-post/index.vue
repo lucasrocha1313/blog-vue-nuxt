@@ -9,7 +9,6 @@
 
 <script>
 import AdminPostForm from "../../../components/admin/admin-post-form.vue";
-import axios from "axios";
 
 export default {
   components: {AdminPostForm},

@@ -9,11 +9,10 @@
 
 <script>
 import PostPreview from "../components/posts/post-preview.vue";
-import PostList from "../components/posts/post-list.vue";
 
 export default {
   name: 'IndexPage',
-  components: {PostList, PostPreview},
+  components: {PostPreview},
   computed: {
     loadedPosts() {
       return this.$store.getters.getLoadedPosts

@@ -11,11 +11,10 @@
 </template>
 
 <script>
-import PostList from "../../components/posts/post-list.vue";
 import AppButton from "../../components/ui/app-button.vue";
 
 export default {
-  components: {AppButton, PostList},
+  components: {AppButton},
   computed: {
     loadedPosts() {
       return this.$store.getters.getLoadedPosts
