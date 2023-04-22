@@ -1,5 +1,4 @@
 import {Store} from 'vuex'
-import axios from "axios";
 
 const createStore = () => {
   return new Store({
@@ -20,10 +19,10 @@ const createStore = () => {
     },
     actions: {
       nuxtServerInit(vueContext, context) {
-        return axios.get(`${this.$config.dbUrl}/posts.json`)
-          .then(response => {
-            const posts = Object.keys(response.data).map(k => {
-              return {...response.data[k], id: k}
+        return context.$axios.$get('/posts.json')
+          .then(data => {
+            const posts = Object.keys(data).map(k => {
+              return {...data[k], id: k}
             })
             vueContext.commit('setPosts', posts)
           })
@@ -36,13 +35,13 @@ const createStore = () => {
       },
       addPost(context, post) {
         const createdPost = {...post, updatedDate: new Date()}
-        return axios.post(`${this.$config.dbUrl}/posts.json`, createdPost)
+        return context.$axios.$post('/posts.json', createdPost)
           .then(res => context.commit('addPost', {...createdPost, id: res.data.name}))
           .catch(err => console.error(err))
       },
       editPost(context, post) {
         const editedPost = {...post, updatedDate: new Date()}
-        return axios.put(`${this.$config.dbUrl}/posts/${editedPost.id}.json`, editedPost)
+        return context.$axios.$put(`${this.$config.dbUrl}/posts/${editedPost.id}.json`, editedPost)
           .then(() =>context.commit('editPost', editedPost))
           .catch(err => console.error(err))
       }

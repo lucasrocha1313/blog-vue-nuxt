@@ -8,17 +8,16 @@
 
 <script>
 import AdminPostForm from "../../../components/admin/admin-post-form.vue";
-import axios from "axios";
 
 export default {
   name: "index",
   components: {AdminPostForm},
   layout: 'admin',
-  asyncData({params, error, $config}) {
-    return axios.get(`${$config.dbUrl}/posts/${params.postId}.json`)
-      .then(res => {
+  asyncData({params, error, $config, $axios}) {
+    return $axios.$get(`/posts/${params.postId}.json`)
+      .then(data => {
         return {
-          loadedPost: {...res.data, id: params.postId}
+          loadedPost: {...data, id: params.postId}
         }
       })
       .catch(err => error(err))
