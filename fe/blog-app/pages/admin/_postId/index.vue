@@ -13,7 +13,8 @@ export default {
   name: "index",
   components: {AdminPostForm},
   layout: 'admin',
-  asyncData({params, error, $config, $axios}) {
+  middleware: 'auth',
+  asyncData({params, error, $axios}) {
     return $axios.$get(`/posts/${params.postId}.json`)
       .then(data => {
         return {

@@ -45,5 +45,8 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   },
-  loading: './components/navigation/loading.vue'
+  loading: './components/navigation/loading.vue',
+  publicRuntimeConfig: {
+    firebaseApiKey: process.env.VUE_FIREBASE_API_KEY
+  }
 }

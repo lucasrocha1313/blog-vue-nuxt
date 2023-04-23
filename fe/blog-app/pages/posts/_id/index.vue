@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  asyncData({params, error, $config, $axios}) {
+  asyncData({params, error, $axios}) {
     return $axios.$get(`/posts/${params.id}.json`)
       .then(data => {
         return {

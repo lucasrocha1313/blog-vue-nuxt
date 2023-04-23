@@ -3,7 +3,8 @@ import {Store} from 'vuex'
 const createStore = () => {
   return new Store({
     state: {
-      loadedPosts: []
+      loadedPosts: [],
+      token: null
     },
     mutations: {
       setPosts(state,posts) {
@@ -15,11 +16,14 @@ const createStore = () => {
       editPost(state, editedPost) {
         const postIndex = state.loadedPosts.findIndex( p => p.id === editedPost.id)
         state.loadedPosts[postIndex] = editedPost
+      },
+      setToken(state, token) {
+        state.token = token
       }
     },
     actions: {
       nuxtServerInit(vueContext, context) {
-        return context.$axios.$get('/posts.json')
+        return this.$axios.$get('/posts.json')
           .then(data => {
             const posts = Object.keys(data).map(k => {
               return {...data[k], id: k}
@@ -27,7 +31,7 @@ const createStore = () => {
             vueContext.commit('setPosts', posts)
           })
           .catch(err => {
-            context.error(err)
+            console.error(err)
           })
       },
       setPosts(context, posts) {
@@ -35,15 +39,33 @@ const createStore = () => {
       },
       addPost(context, post) {
         const createdPost = {...post, updatedDate: new Date()}
-        return context.$axios.$post('/posts.json', createdPost)
+        return this.$axios.$post(`/posts.json?auth=${context.state.token}`, createdPost)
           .then(res => context.commit('addPost', {...createdPost, id: res.data.name}))
           .catch(err => console.error(err))
       },
       editPost(context, post) {
         const editedPost = {...post, updatedDate: new Date()}
-        return context.$axios.$put(`${this.$config.dbUrl}/posts/${editedPost.id}.json`, editedPost)
+        return this.$axios.$put(`/posts/${editedPost.id}.json?auth=${context.state.token}`, editedPost)
           .then(() =>context.commit('editPost', editedPost))
           .catch(err => console.error(err))
+      },
+      authUser(context, authData) {
+        let action = 'signInWithPassword'
+        if(!authData.isLogin) {
+          action = 'signUp'
+        }
+
+        return this.$axios.$post(`https://identitytoolkit.googleapis.com/v1/accounts:${action}?key=${this.$config.firebaseApiKey}`,
+          {
+            email: authData.email,
+            password:  authData.password,
+            returnSecureToken: true
+          }
+        ).then(res => {
+          context.commit('setToken', res.idToken)
+        }).catch(err => {
+          console.error(err)
+        })
       }
     },
     getters: {
