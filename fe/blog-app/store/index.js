@@ -23,12 +23,7 @@ const createStore = () => {
       },
       clearToken(state) {
         state.token = null
-      },
-      setLogoutTimer(context, duration) {
-        setTimeout(() => {
-          context.commit('clearToken')
-        }, duration)
-      },
+      }
     },
     actions: {
       nuxtServerInit(vueContext) {
@@ -76,7 +71,6 @@ const createStore = () => {
           localStorage.setItem('tokenExpiration', new Date().getTime() + res.expiresIn*1000)
           Cookie.set('jwt', res.idToken)
           Cookie.set('expirationDate', new Date().getTime() + res.expiresIn*1000)
-          context.dispatch('setLogoutTimer', res.expiresIn * 1000)
 
         }).catch(err => {
           console.error(err)
@@ -94,12 +88,21 @@ const createStore = () => {
         } else {
           token = localStorage.getItem('token')
           expirationDate = localStorage.getItem('tokenExpiration')
-
-          if(new Date().getTime() > expirationDate || !token) return
         }
 
-        context.commit('setLogoutTimer', expirationDate - new Date().getTime())
+        if(new Date().getTime() > expirationDate || !token) {
+          context.dispatch('logout')
+          return;
+        }
+
         context.commit('setToken', token)
+      },
+      logout(context) {
+        context.commit('clearToken')
+        Cookie.remove('jwt')
+        Cookie.remove('expirationDate')
+        localStorage.removeItem('token')
+        localStorage.removeItem('tokenExpiration')
       }
     },
     getters: {
