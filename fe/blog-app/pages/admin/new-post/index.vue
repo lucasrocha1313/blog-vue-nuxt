@@ -13,7 +13,7 @@ import AdminPostForm from "../../../components/admin/admin-post-form.vue";
 export default {
   components: {AdminPostForm},
   layout: 'admin',
-  middleware: 'auth',
+  middleware: ['check-auth', 'auth'],
   methods: {
     onSubmitted(postData) {
       this.$store.dispatch('addPost', postData)

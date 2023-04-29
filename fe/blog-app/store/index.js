@@ -1,4 +1,5 @@
 import {Store} from 'vuex'
+import Cookie from 'js-cookie'
 
 const createStore = () => {
   return new Store({
@@ -19,10 +20,13 @@ const createStore = () => {
       },
       setToken(state, token) {
         state.token = token
+      },
+      clearToken(state) {
+        state.token = null
       }
     },
     actions: {
-      nuxtServerInit(vueContext, context) {
+      nuxtServerInit(vueContext) {
         return this.$axios.$get('/posts.json')
           .then(data => {
             const posts = Object.keys(data).map(k => {
@@ -63,9 +67,39 @@ const createStore = () => {
           }
         ).then(res => {
           context.commit('setToken', res.idToken)
+          localStorage.setItem('token',  res.idToken)
+          localStorage.setItem('tokenExpiration', new Date().getTime() + res.expiresIn*1000)
+          Cookie.set('jwt', res.idToken)
+          Cookie.set('expirationDate', new Date().getTime() + res.expiresIn*1000)
+          context.dispatch('setLogoutTimer', res.expiresIn * 1000)
+
         }).catch(err => {
           console.error(err)
         })
+      },
+      setLogoutTimer(context, duration) {
+        setTimeout(() => {
+          context.commit('clearToken')
+        }, duration)
+      },
+      initAuth(context, req) {
+        let token = null
+        let expirationDate = null
+        if(req) {
+          const jwtCookie = req.headers?.cookie?.split(";").find(c => c.trim().startsWith("jwt="))
+
+          if(!jwtCookie) return;
+          token = jwtCookie.split('=')[1]
+          expirationDate = req.headers?.cookie?.split(";").find(c => c.trim().startsWith("expirationDate=")).split('=')[1]
+        } else {
+          token = localStorage.getItem('token')
+          expirationDate = localStorage.getItem('tokenExpiration')
+
+          if(new Date().getTime() > expirationDate || !token) return
+        }
+
+        context.commit('setLogoutTimer', expirationDate - new Date().getTime())
+        context.commit('setToken', token)
       }
     },
     getters: {

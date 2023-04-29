@@ -13,7 +13,7 @@ export default {
   name: "index",
   components: {AdminPostForm},
   layout: 'admin',
-  middleware: 'auth',
+  middleware: ['check-auth', 'auth'],
   asyncData({params, error, $axios}) {
     return $axios.$get(`/posts/${params.postId}.json`)
       .then(data => {
