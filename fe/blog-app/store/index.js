@@ -23,7 +23,12 @@ const createStore = () => {
       },
       clearToken(state) {
         state.token = null
-      }
+      },
+      setLogoutTimer(context, duration) {
+        setTimeout(() => {
+          context.commit('clearToken')
+        }, duration)
+      },
     },
     actions: {
       nuxtServerInit(vueContext) {
@@ -76,11 +81,6 @@ const createStore = () => {
         }).catch(err => {
           console.error(err)
         })
-      },
-      setLogoutTimer(context, duration) {
-        setTimeout(() => {
-          context.commit('clearToken')
-        }, duration)
       },
       initAuth(context, req) {
         let token = null
